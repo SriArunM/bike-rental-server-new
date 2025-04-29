@@ -56,26 +56,26 @@ const verifyAamarpayPayment = async (paymentId: string): Promise<string> => {
   const result = await axios.get(url);
 
   if (result?.data?.pay_status === 'Successful') {
-      
-        const booking = await Booking.findById({_id:[paymentId]})
 
-        const data = {
-          paymentType: 'Aamar Pay',
-          paymentId,
-          completedPayment: true,
-        } as Partial<TBooking>;
+    const booking = await Booking.findById({ _id: [paymentId] })
 
-          if (new Date(booking?.endDate as Date) < new Date()) {
-            data.status = 'completed';
-          }
+    const data = {
+      paymentType: 'aamar pay',
+      paymentId,
+      completedPayment: true,
+    } as Partial<TBooking>;
 
-      const updatePaymentOfBooking = await Booking.updateOne(
-        { _id: paymentId },
-        data,
-      );
+    if (new Date(booking?.endDate as Date) < new Date()) {
+      data.status = 'completed';
+    }
 
-      if(updatePaymentOfBooking){
-        return `<!DOCTYPE html>
+    const updatePaymentOfBooking = await Booking.updateOne(
+      { _id: paymentId },
+      data,
+    );
+
+    if (updatePaymentOfBooking) {
+      return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -172,15 +172,15 @@ const verifyAamarpayPayment = async (paymentId: string): Promise<string> => {
 </body>
 </html>
 `;
-      }else{
-        return `<h1>Something Went Wrong</h1>`;
-      }
-
-    
-
-  }else{
-
+    } else {
       return `<h1>Something Went Wrong</h1>`;
+    }
+
+
+
+  } else {
+
+    return `<h1>Something Went Wrong</h1>`;
   }
 
 };
